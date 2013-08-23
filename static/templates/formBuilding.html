@@ -1,0 +1,34 @@
+<form>
+	<% if(obj) {%><input type="hidden" name="_id" value="<%= obj._id %>"><% } %>
+	<input name="title" placeholder="Titel" value="<% if(obj) {%><%= obj.title %><% } %>">
+	<br>
+	<textarea name="description" placeholder="Beschreibung" rows="6"><% if(obj) {%><%= obj.description %><% } %></textarea><br>
+	<input name="gps" placeholder="GPS" value="<% if(obj) {%><%= obj.gps %><% } %>"><br>
+	<select name="type">
+		<% if(obj) {%>
+			<option selected="selected" value="<%= obj.type %>"><%= obj.type %></option>
+		<% } else { %>
+			<option selected="selected" value="building">Bauwerk</option>
+		<% } %>
+	</select>
+	<br>
+	<input id="submit" type="submit" value="Neue Version speichern"> 
+<% if(obj) {%>
+	<br>
+	<input id="delte" type="button" value="Version löschen">
+	<br>
+	<input id="localCopyBtn" type="button" value="lokale Kopie erstellen">
+<% } %>
+	
+
+</form>
+
+<% if(obj) { if (obj._revs_info) {%>
+	<hr>
+	<h4>Versionen:</h4>
+	<ul>
+		<% _.each(obj._revs_info, function(revision){ %>
+			<li id="<%= revision.rev %>"><small><%= revision.rev %></small></li>
+		<% }) %>
+	</ul>
+<% }} %>
