@@ -15,8 +15,32 @@ define [
 
 			initialize: (params) ->
 				@buildings = params.buildings
+				@appStatus = params.appStatus	
+				@appStatus.bind 'change:online', @reloadControllerForConnectivityChange, @
+				
+				appCache = window.applicationCache;
+				switch appCache.status
+					when appCache.UNCACHED
+						console.log 'App cache status: UNCACHED'
+					when appCache.IDLE 
+						console.log 'App cache status: IDLE'
+					when appCache.CHECKING
+						console.log 'App cache status: CHECKING'
+					when appCache.DOWNLOADING
+						console.log 'App cache status: DOWNLOADING'
+					when appCache.UPDATEREADY
+						console.log 'App cache status: UPDATEREADY'
+						appCache.swapCache()
+						appCache.reload()
+					when appCache.OBSOLETE
+						console.log 'App cache status: OBSOLETE'
+					else
+						console.log 'App cache status: UKNOWN CACHE STATUS'
 
-			index: ->
+			reloadControllerForConnectivityChange: () ->
+				console.log @controller.id
+				if @controller.id == 'buildingController'
+					@controller.list()
 
 			search: (q) ->
 				@initBuildingController()
@@ -40,7 +64,6 @@ define [
 					else
 						@buildings.setCurrentBuildingById(id)
 						@controller.show()
-
 
 			login : () ->
 				unless @controller?

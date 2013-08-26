@@ -18,7 +18,17 @@
       };
 
       MenuController.prototype.initialize = function(params) {
-        return $(this.el).html(_.template(Layout));
+        $(this.el).html(_.template(Layout));
+        this.appStatus = params.appStatus;
+        return this.appStatus.bind('change:online', this.updateConnectivityIcon, this);
+      };
+
+      MenuController.prototype.updateConnectivityIcon = function() {
+        if (this.appStatus.isOnline()) {
+          return $('#connectivity').addClass('icon-cloud');
+        } else {
+          return $('#connectivity').removeClass('icon-cloud');
+        }
       };
 
       MenuController.prototype.forwardToSearch = function(event) {

@@ -5,7 +5,14 @@ define ['backbone', '../models/building'], (Backbone, Building) ->
 		_currentBuildingId : null
 		
 		parse : (response) ->
+
+			_.each response, (building) ->
+				building.localVersionAvailable = true if (localStorage.getItem building._id)?
+					
+			, @ 
+
 			@reset(response)
+			
 			response
 
 		setCurrentBuildingById: (id) ->
@@ -19,3 +26,16 @@ define ['backbone', '../models/building'], (Backbone, Building) ->
 
 		getCurrentBuildingId: ->
 			@_currentBuildingId
+
+		loadLocalCopy: () ->
+			@reset()
+			i = 0
+			while i < localStorage.length
+				objectAttributes = $.parseJSON(localStorage.getItem(localStorage.key(i)))
+				objectAttributes.localVersionAvailable = true
+				@add objectAttributes
+				i++
+
+		saveLocalCopy: () ->
+
+		addBuildingToLocalCopy: () ->

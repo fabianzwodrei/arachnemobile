@@ -30,6 +30,11 @@
 
   nano = require('nano')('http://localhost:5984');
 
+  app.get("/api", function(request, response) {
+    response.header("Content-Type", "application/json");
+    return response.send(200, '{ "online" : true }');
+  });
+
   app.get("/api/buildings", buildingController.list);
 
   app.post("/api/buildings", buildingController.insert);
@@ -40,6 +45,7 @@
 
   app.get("/site.manifest", function(request, response, next) {
     response.header("Content-Type", "text/cache-manifest");
+    console.log("Site Manifest File was requested");
     return next();
   });
 

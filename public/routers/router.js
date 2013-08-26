@@ -11,9 +11,36 @@
         'login': 'login'
       },
       initialize: function(params) {
-        return this.buildings = params.buildings;
+        var appCache;
+        this.buildings = params.buildings;
+        this.appStatus = params.appStatus;
+        this.appStatus.bind('change:online', this.reloadControllerForConnectivityChange, this);
+        appCache = window.applicationCache;
+        switch (appCache.status) {
+          case appCache.UNCACHED:
+            return console.log('App cache status: UNCACHED');
+          case appCache.IDLE:
+            return console.log('App cache status: IDLE');
+          case appCache.CHECKING:
+            return console.log('App cache status: CHECKING');
+          case appCache.DOWNLOADING:
+            return console.log('App cache status: DOWNLOADING');
+          case appCache.UPDATEREADY:
+            console.log('App cache status: UPDATEREADY');
+            appCache.swapCache();
+            return appCache.reload();
+          case appCache.OBSOLETE:
+            return console.log('App cache status: OBSOLETE');
+          default:
+            return console.log('App cache status: UKNOWN CACHE STATUS');
+        }
       },
-      index: function() {},
+      reloadControllerForConnectivityChange: function() {
+        console.log(this.controller.id);
+        if (this.controller.id === 'buildingController') {
+          return this.controller.list();
+        }
+      },
       search: function(q) {
         this.initBuildingController();
         return this.controller.search(q);

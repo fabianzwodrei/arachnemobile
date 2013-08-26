@@ -20,27 +20,16 @@ define	[
 				@buildings.bind('error', @showError, @)
 
 			showError: (e, xhr) ->
-				console.log xhr.status
 				if xhr.status == 401
 					if confirm "Bitte anmelden."
 						$(window.location).attr
 							href : '#login'
 				if xhr.status == 0
-					alert "...lade lokale, offline Daten"
-					@buildings.reset()
-					i = 0
-					while i < localStorage.length
-						@buildings.add $.parseJSON(localStorage.getItem(localStorage.key(i)))
-						i++
-					@renderList()
+					@useLocalstorage()
 
 
-			loadFromLS: () ->
-				@buildings.reset()
-				i = 0
-				while i < localStorage.length
-					@buildings.add $.parseJSON(localStorage.getItem(localStorage.key(i)))
-					i++
+			useLocalstorage: () ->
+				@buildings.loadLocalCopy()
 				@renderList()
 
 			list: ->

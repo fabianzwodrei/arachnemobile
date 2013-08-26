@@ -31,8 +31,6 @@
       };
 
       BuildingController.prototype.showError = function(e, xhr) {
-        var i;
-        console.log(xhr.status);
         if (xhr.status === 401) {
           if (confirm("Bitte anmelden.")) {
             $(window.location).attr({
@@ -41,25 +39,12 @@
           }
         }
         if (xhr.status === 0) {
-          alert("...lade lokale, offline Daten");
-          this.buildings.reset();
-          i = 0;
-          while (i < localStorage.length) {
-            this.buildings.add($.parseJSON(localStorage.getItem(localStorage.key(i))));
-            i++;
-          }
-          return this.renderList();
+          return this.useLocalstorage();
         }
       };
 
-      BuildingController.prototype.loadFromLS = function() {
-        var i;
-        this.buildings.reset();
-        i = 0;
-        while (i < localStorage.length) {
-          this.buildings.add($.parseJSON(localStorage.getItem(localStorage.key(i))));
-          i++;
-        }
+      BuildingController.prototype.useLocalstorage = function() {
+        this.buildings.loadLocalCopy();
         return this.renderList();
       };
 

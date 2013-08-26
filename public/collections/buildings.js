@@ -20,6 +20,11 @@
       Buildings.prototype._currentBuildingId = null;
 
       Buildings.prototype.parse = function(response) {
+        _.each(response, function(building) {
+          if ((localStorage.getItem(building._id)) != null) {
+            return building.localVersionAvailable = true;
+          }
+        }, this);
         this.reset(response);
         return response;
       };
@@ -40,6 +45,24 @@
       Buildings.prototype.getCurrentBuildingId = function() {
         return this._currentBuildingId;
       };
+
+      Buildings.prototype.loadLocalCopy = function() {
+        var i, objectAttributes, _results;
+        this.reset();
+        i = 0;
+        _results = [];
+        while (i < localStorage.length) {
+          objectAttributes = $.parseJSON(localStorage.getItem(localStorage.key(i)));
+          objectAttributes.localVersionAvailable = true;
+          this.add(objectAttributes);
+          _results.push(i++);
+        }
+        return _results;
+      };
+
+      Buildings.prototype.saveLocalCopy = function() {};
+
+      Buildings.prototype.addBuildingToLocalCopy = function() {};
 
       return Buildings;
 

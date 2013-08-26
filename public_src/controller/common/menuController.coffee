@@ -3,8 +3,18 @@ define ['../controller', 'text!/../static/layouts/menu.html'	],
 		class MenuController extends Controller
 			events:
 				'submit' : 'forwardToSearch'
+
 			initialize: (params) ->
-				$(@el).html(_.template(Layout)) 
+				$(@el).html(_.template(Layout))
+				@appStatus = params.appStatus
+				@appStatus.bind 'change:online', @updateConnectivityIcon, @
+
+
+			updateConnectivityIcon : () ->
+				if @appStatus.isOnline()
+					$('#connectivity').addClass 'icon-cloud'
+				else
+					$('#connectivity').removeClass 'icon-cloud'
 
 			forwardToSearch: (event) ->
 				event.preventDefault()

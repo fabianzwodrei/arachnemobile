@@ -1,4 +1,5 @@
 CACHE MANIFEST
+# Datusdrdss
 
 /static/lib/require.js
 /static/stylesheets/style.css
@@ -17,6 +18,7 @@ CACHE MANIFEST
 /static/lib/underscore-min.js
 /models/building.js
 /models/user.js
+/models/appStatus.js
 /static/layouts/menu.html
 /static/templates/formBuilding.html
 /static/templates/listedBuilding.html

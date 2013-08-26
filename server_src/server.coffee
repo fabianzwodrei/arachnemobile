@@ -57,6 +57,9 @@ nano = require('nano')('http://localhost:5984')
 # 	buildingController.list() 
 
 
+app.get "/api", (request, response) ->
+	response.header "Content-Type", "application/json"
+	response.send 200, '{ "online" : true }'
 
 app.get "/api/buildings", buildingController.list
 app.post "/api/buildings", buildingController.insert
@@ -68,6 +71,7 @@ app.put "/api/buildings/:id", buildingController.insert
 
 app.get "/site.manifest", (request, response, next) ->
 	response.header "Content-Type", "text/cache-manifest"
+	console.log "Site Manifest File was requested"
 	next()
 
 #Start server
