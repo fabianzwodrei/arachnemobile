@@ -26,7 +26,7 @@
         self = this;
         return this.interval = setInterval(function() {
           return self.checkConnectivity();
-        }, 1000);
+        }, 5000);
       };
 
       AppStatus.prototype.checkConnectivity = function() {

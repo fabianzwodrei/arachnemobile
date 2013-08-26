@@ -11,7 +11,7 @@ define ['backbone'], (Backbone) ->
 			self = this
 			@interval = setInterval(->
 				self.checkConnectivity()
-			, 1000)
+			, 5000)
 
 		checkConnectivity: () ->
 			@fetch()

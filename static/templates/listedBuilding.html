@@ -1,8 +1,11 @@
-<li>
-	<a href="#buildings/<%= obj._id %>"><%= obj.title %></a>
+<li id="<%= obj._id %>">
+
 	<% if(obj.localVersionAvailable) { %>
-	<i class="icon-cloud-download pull-right" style="color:red"></i>
+	<i class="icon-cloud-download pull-right" style="color:red"></i></a>
 	<% } else { %>
-	<a href=""><i class="icon-cloud-download pull-right"></i></a>
+	<i class="icon-cloud-download pull-right"></i>
 	<% } %>
+
+	<a href="#buildings/<%= obj._id %>"><%= obj.title %></a>
+	
 </li>

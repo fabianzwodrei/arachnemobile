@@ -112,8 +112,9 @@ define	[
 				, @)
 				@buildings.getCurrentBuilding().destroy()
 
-			localCopy : () ->
+			localCopy : ->
 				localStorage.setItem( @building.id , JSON.stringify(@building.toJSON()) );
+				@list()
 
 			release: ->
 				@remove()

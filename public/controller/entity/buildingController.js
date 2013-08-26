@@ -142,7 +142,8 @@
       };
 
       BuildingController.prototype.localCopy = function() {
-        return localStorage.setItem(this.building.id, JSON.stringify(this.building.toJSON()));
+        localStorage.setItem(this.building.id, JSON.stringify(this.building.toJSON()));
+        return this.list();
       };
 
       BuildingController.prototype.release = function() {
