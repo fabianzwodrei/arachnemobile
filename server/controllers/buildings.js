@@ -19,7 +19,7 @@
   exports.get = function(request, response) {
     var options;
     options = {
-      revs_info: true
+      revs_info: false
     };
     if (request.query.rev != null) {
       options.rev = request.query.rev;
@@ -34,7 +34,10 @@
   };
 
   exports.insert = function(request, response) {
-    if (request.body != null) {
+    if (request.body._id != null) {
+      if (request.body.status === 'changedOnClient') {
+        request.body.status = 'serverVersion';
+      }
       return db.insert(request.body, request.body._id, function(error, obj) {
         if (error == null) {
           return response.send(200, obj);

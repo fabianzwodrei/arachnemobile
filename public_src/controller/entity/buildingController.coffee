@@ -12,12 +12,17 @@ define	[
 				'submit' : 'save'
 				'click #delte' : 'delete'
 				'click #localCopyBtn' : 'localCopy'
+				'click #deleteLocalCopyBtn' : 'deleteLocalCopy'
 
 			initialize: (buildings) ->
 				$('body').append(@el)
 				@buildings = buildings
+				# @buildings.bind('all', @logger, @)
 				@buildings.bind('reset', @renderList, @)
 				@buildings.bind('error', @showError, @)
+
+			logger: (e) ->
+				console.log e
 
 			showError: (e, xhr) ->
 				if xhr.status == 401
@@ -33,6 +38,7 @@ define	[
 				@renderList()
 
 			list: ->
+
 				# Normale Auflistung aller Einträge:
 				# ...weil es zuvor eine Suche gegeben haben kann,
 				# muss der Suchstring hier zurückgesetzt werden
@@ -48,9 +54,8 @@ define	[
 				$('#searchinput').blur()
 				
 
-			renderList: (event) ->
+			renderList: () ->
 				$(@el).html('')
-
 				# Bei der Anzeige von Suchergebnissen wird der Such-Term angezeigt
 				if @query?
 					$(@el).append('<li><b>Suche</b> für »' + @query + '«</li>')
@@ -58,7 +63,9 @@ define	[
 				$(window.location).attr({'href':'#buildings'}) unless $(window.l)
 				@listTemplate = _.template(ListedBuildingTemplate)
 				_.each @buildings.models, (building) ->
-					$(@el).append @listTemplate(building.toJSON())
+					$(@el).append @listTemplate
+						obj: building.toJSON()
+						localVersionAvailable : building.localVersionAvailable 
 				,@ 
 
 			form: ->
@@ -70,13 +77,12 @@ define	[
 				if @building.attributes.description?
 					$(@el).html('')
 					compiledFormTemplate = _.template(FormTemplate)
-					$(@el).html(compiledFormTemplate(@building.toJSON()))
+					$(@el).html compiledFormTemplate
+						obj: @building.toJSON()
+						localVersionAvailable : @building.localVersionAvailable
 				else
 					@building.bind('change', @show,@)
 					@building.fetch()
-				
-				if localStorage[@building.id]?
-					$(@el).append '<i class="icon-briefcase"></i>'
 
 			save: (event) ->
 				event.preventDefault()
@@ -105,6 +111,9 @@ define	[
 				building.save()
 
 			delete: (event) ->
+				if localStorage.getItem @building.id?
+					@deleteLocalCopy()
+
 				$(event.target).replaceWith('lädt')
 				@buildings.bind('remove', () ->
 					@buildings.unbind('remove')
@@ -114,7 +123,12 @@ define	[
 
 			localCopy : ->
 				localStorage.setItem( @building.id , JSON.stringify(@building.toJSON()) );
-				@list()
+				window.location.hash = 'buildings'
+			
+			deleteLocalCopy : ->
+				localStorage.removeItem @building.id
+				window.location.hash = 'buildings'
+
 
 			release: ->
 				@remove()

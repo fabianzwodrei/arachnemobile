@@ -2,7 +2,7 @@ define ['backbone'], (Backbone) ->
 	class AppStatus extends Backbone.Model
 		url : 'api'
 		defaults :
-			online : false
+			online : true
 
 		initialize : () ->
 			@checkConnectivity()

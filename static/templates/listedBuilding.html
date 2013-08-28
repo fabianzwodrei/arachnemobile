@@ -1,8 +1,12 @@
 <li id="<%= obj._id %>">
 
-	<% if(obj.localVersionAvailable) { %>
-	<i class="icon-cloud-download pull-right" style="color:red"></i></a>
-	<% } else { %>
+	<% if(localVersionAvailable) {
+			if(obj.status == 'changedOnClient') { %>
+			<i class="icon-cloud-upload pull-right" style="color:red"></i></a>
+			<% 	} else {	 %>
+			<i class="icon-cloud-download pull-right" style="color:blue"></i></a>
+	<% 		} 
+	} else { %>
 	<i class="icon-cloud-download pull-right"></i>
 	<% } %>
 

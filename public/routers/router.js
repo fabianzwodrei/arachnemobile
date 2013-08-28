@@ -36,8 +36,7 @@
         }
       },
       reloadControllerForConnectivityChange: function() {
-        console.log(this.controller.id);
-        if (this.controller.id === 'buildingController') {
+        if (this.controller.id === 'buildingController' && Backbone.history.fragment === "buildings") {
           return this.controller.list();
         }
       },

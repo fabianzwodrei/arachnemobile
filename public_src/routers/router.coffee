@@ -38,8 +38,7 @@ define [
 						console.log 'App cache status: UKNOWN CACHE STATUS'
 
 			reloadControllerForConnectivityChange: () ->
-				console.log @controller.id
-				if @controller.id == 'buildingController'
+				if @controller.id == 'buildingController' and Backbone.history.fragment == "buildings"
 					@controller.list()
 
 			search: (q) ->
@@ -55,7 +54,6 @@ define [
 
 			buildings: (id) ->
 				id = null unless id?
-
 				@initBuildingController()
 
 				switch id

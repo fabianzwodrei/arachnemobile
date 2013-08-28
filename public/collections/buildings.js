@@ -20,12 +20,20 @@
       Buildings.prototype._currentBuildingId = null;
 
       Buildings.prototype.parse = function(response) {
-        _.each(response, function(building) {
-          if ((localStorage.getItem(building._id)) != null) {
-            return building.localVersionAvailable = true;
+        this.reset(response, {
+          silent: true
+        });
+        this.each(function(building) {
+          var localCopy;
+          if ((localCopy = localStorage.getItem(building.id)) != null) {
+            building.localVersionAvailable = true;
+            localCopy = $.parseJSON(localCopy);
+            if (localCopy.status === "changedOnClient") {
+              return building.set(localCopy);
+            }
           }
-        }, this);
-        this.reset(response);
+        });
+        this.trigger('reset');
         return response;
       };
 
@@ -39,22 +47,40 @@
       };
 
       Buildings.prototype.getCurrentBuilding = function() {
-        return this.get(this._currentBuildingId);
+        var current;
+        current = this.get(this._currentBuildingId);
+        if (current != null) {
+          if (current.attributes.status === "changedOnClient") {
+            current.set($.parseJSON(localStorage.getItem(this._currentBuildingId)));
+          }
+        }
+        return current;
       };
 
       Buildings.prototype.getCurrentBuildingId = function() {
         return this._currentBuildingId;
       };
 
+      Buildings.prototype.getChangedLocalCopy = function(buildingId) {
+        var localCopy;
+        if ((localCopy = localStorage.getItem(buildingId)) != null) {
+          if (localCopy.attributes.status === 'changedOnClient') {
+            return localCopy;
+          }
+        }
+        return false;
+      };
+
       Buildings.prototype.loadLocalCopy = function() {
-        var i, objectAttributes, _results;
+        var building, i, objectAttributes, _results;
         this.reset();
         i = 0;
         _results = [];
         while (i < localStorage.length) {
           objectAttributes = $.parseJSON(localStorage.getItem(localStorage.key(i)));
-          objectAttributes.localVersionAvailable = true;
-          this.add(objectAttributes);
+          building = new Building(objectAttributes);
+          building.localVersionAvailable = true;
+          this.add(building);
           _results.push(i++);
         }
         return _results;

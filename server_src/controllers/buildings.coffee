@@ -13,7 +13,7 @@ exports.get = (request, response) ->
 	#  rev_info = true bewirkt eine Übertragung einer Versionsliste,
 	#  die man dem Nutzer anzeigen kann
 	options = {
-		revs_info : true
+		revs_info : false
 	}
 
 	# wenn eine spezielle Version angefragt wurde,
@@ -28,7 +28,10 @@ exports.get = (request, response) ->
 			response.send 500, error
 
 exports.insert = (request, response) ->
-	if request.body?
+	if request.body._id?
+		if request.body.status == 'changedOnClient'
+			request.body.status = 'serverVersion'
+
 		db.insert request.body, request.body._id, (error, obj) ->
 			unless error?
 				response.send 200, obj

@@ -20,7 +20,8 @@
       BuildingController.prototype.events = {
         'submit': 'save',
         'click #delte': 'delete',
-        'click #localCopyBtn': 'localCopy'
+        'click #localCopyBtn': 'localCopy',
+        'click #deleteLocalCopyBtn': 'deleteLocalCopy'
       };
 
       BuildingController.prototype.initialize = function(buildings) {
@@ -28,6 +29,10 @@
         this.buildings = buildings;
         this.buildings.bind('reset', this.renderList, this);
         return this.buildings.bind('error', this.showError, this);
+      };
+
+      BuildingController.prototype.logger = function(e) {
+        return console.log(e);
       };
 
       BuildingController.prototype.showError = function(e, xhr) {
@@ -63,7 +68,7 @@
         return $('#searchinput').blur();
       };
 
-      BuildingController.prototype.renderList = function(event) {
+      BuildingController.prototype.renderList = function() {
         $(this.el).html('');
         if (this.query != null) {
           $(this.el).append('<li><b>Suche</b> für »' + this.query + '«</li>');
@@ -75,7 +80,10 @@
         }
         this.listTemplate = _.template(ListedBuildingTemplate);
         return _.each(this.buildings.models, function(building) {
-          return $(this.el).append(this.listTemplate(building.toJSON()));
+          return $(this.el).append(this.listTemplate({
+            obj: building.toJSON(),
+            localVersionAvailable: building.localVersionAvailable
+          }));
         }, this);
       };
 
@@ -90,13 +98,13 @@
         if (this.building.attributes.description != null) {
           $(this.el).html('');
           compiledFormTemplate = _.template(FormTemplate);
-          $(this.el).html(compiledFormTemplate(this.building.toJSON()));
+          return $(this.el).html(compiledFormTemplate({
+            obj: this.building.toJSON(),
+            localVersionAvailable: this.building.localVersionAvailable
+          }));
         } else {
           this.building.bind('change', this.show, this);
-          this.building.fetch();
-        }
-        if (localStorage[this.building.id] != null) {
-          return $(this.el).append('<i class="icon-briefcase"></i>');
+          return this.building.fetch();
         }
       };
 
@@ -131,6 +139,9 @@
       };
 
       BuildingController.prototype["delete"] = function(event) {
+        if (localStorage.getItem(this.building.id != null)) {
+          this.deleteLocalCopy();
+        }
         $(event.target).replaceWith('lädt');
         this.buildings.bind('remove', function() {
           this.buildings.unbind('remove');
@@ -143,7 +154,12 @@
 
       BuildingController.prototype.localCopy = function() {
         localStorage.setItem(this.building.id, JSON.stringify(this.building.toJSON()));
-        return this.list();
+        return window.location.hash = 'buildings';
+      };
+
+      BuildingController.prototype.deleteLocalCopy = function() {
+        localStorage.removeItem(this.building.id);
+        return window.location.hash = 'buildings';
       };
 
       BuildingController.prototype.release = function() {

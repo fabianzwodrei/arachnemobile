@@ -6,6 +6,8 @@
   define(['backbone'], function(Backbone) {
     var Building, _ref;
     return Building = (function(_super) {
+      var localVersionAvailable;
+
       __extends(Building, _super);
 
       function Building() {
@@ -16,6 +18,29 @@
       Building.prototype.urlRoot = "api/buildings";
 
       Building.prototype.idAttribute = "_id";
+
+      localVersionAvailable = false;
+
+      Building.prototype.attributes = {
+        status: 'unknown'
+      };
+
+      Building.prototype.save = function(attributes, options) {
+        options = {};
+        options.error = function(building, xhr, options) {
+          console.log("error while saving");
+          building.set({
+            status: 'changedOnClient'
+          });
+          return localStorage.setItem(building.id, JSON.stringify(building.toJSON()));
+        };
+        options.success = function(building, xhr) {
+          if ((localStorage.getItem(building.id)) != null) {
+            return localStorage.removeItem(building.id);
+          }
+        };
+        return Backbone.Model.prototype.save.call(this, attributes, options);
+      };
 
       return Building;
 

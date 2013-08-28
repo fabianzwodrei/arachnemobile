@@ -4,6 +4,7 @@
 	<br>
 	<textarea name="description" placeholder="Beschreibung" rows="6"><% if(obj) {%><%= obj.description %><% } %></textarea><br>
 	<input name="gps" placeholder="GPS" value="<% if(obj) {%><%= obj.gps %><% } %>"><br>
+	<input name="status" placeholder="Status" value="<% if(obj) {%><%= obj.status %><% } %>" disabled><br>
 	<select name="type">
 		<% if(obj) {%>
 			<option selected="selected" value="<%= obj.type %>"><%= obj.type %></option>
@@ -17,7 +18,11 @@
 	<br>
 	<input id="delte" type="button" value="Version löschen">
 	<br>
-	<input id="localCopyBtn" type="button" value="lokale Kopie erstellen">
+	<% if(localVersionAvailable) { %>
+		<input id="deleteLocalCopyBtn" type="button" value="lokale Kopie löschen">
+	<% } else { %>
+		<input id="localCopyBtn" type="button" value="lokale Kopie erstellen">
+	<% } %>
 <% } %>
 	
 

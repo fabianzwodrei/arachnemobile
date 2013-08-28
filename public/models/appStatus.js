@@ -16,7 +16,7 @@
       AppStatus.prototype.url = 'api';
 
       AppStatus.prototype.defaults = {
-        online: false
+        online: true
       };
 
       AppStatus.prototype.initialize = function() {
