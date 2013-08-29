@@ -27,6 +27,7 @@
       BuildingController.prototype.initialize = function(buildings) {
         $('body').append(this.el);
         this.buildings = buildings;
+        this.buildings.bind('all', this.logger, this);
         this.buildings.bind('reset', this.renderList, this);
         return this.buildings.bind('error', this.showError, this);
       };
@@ -49,7 +50,12 @@
       };
 
       BuildingController.prototype.useLocalstorage = function() {
+        console.log("useLocalStorage");
         this.buildings.loadLocalCopy();
+        $(window.location).attr({
+          'href': '#buildings',
+          'trigger': false
+        });
         return this.renderList();
       };
 
@@ -98,10 +104,13 @@
         if (this.building.attributes.description != null) {
           $(this.el).html('');
           compiledFormTemplate = _.template(FormTemplate);
-          return $(this.el).html(compiledFormTemplate({
+          $(this.el).html(compiledFormTemplate({
             obj: this.building.toJSON(),
             localVersionAvailable: this.building.localVersionAvailable
           }));
+          return $('input, textarea').change(function() {
+            return $('#status').val('modified');
+          });
         } else {
           this.building.bind('change', this.show, this);
           return this.building.fetch();

@@ -35,7 +35,7 @@
 
   exports.insert = function(request, response) {
     if (request.body._id != null) {
-      if (request.body.status === 'changedOnClient') {
+      if (request.body.status === 'modified') {
         request.body.status = 'serverVersion';
       }
       return db.insert(request.body, request.body._id, function(error, obj) {
@@ -54,6 +54,16 @@
         }
       });
     }
+  };
+
+  exports["delete"] = function(request, response) {
+    return db.destroy(request.params.id, request.query.rev, function(error, body) {
+      if (error == null) {
+        return response.send(200, body);
+      } else {
+        return response.send(500, body);
+      }
+    });
   };
 
 }).call(this);

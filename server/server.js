@@ -43,6 +43,8 @@
 
   app.put("/api/buildings/:id", buildingController.insert);
 
+  app["delete"]("/api/buildings/:id", buildingController["delete"]);
+
   app.get("/site.manifest", function(request, response, next) {
     response.header("Content-Type", "text/cache-manifest");
     console.log("Site Manifest File was requested");

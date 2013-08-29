@@ -29,7 +29,7 @@ exports.get = (request, response) ->
 
 exports.insert = (request, response) ->
 	if request.body._id?
-		if request.body.status == 'changedOnClient'
+		if request.body.status == 'modified'
 			request.body.status = 'serverVersion'
 
 		db.insert request.body, request.body._id, (error, obj) ->
@@ -43,3 +43,12 @@ exports.insert = (request, response) ->
 				response.send 200, obj
 			else 
 				response.send 500, error
+
+exports.delete = (request, response) ->
+	db.destroy request.params.id, request.query.rev, (error, body) ->
+		unless error?
+				response.send 200, body
+			else 
+				response.send 500, body
+
+

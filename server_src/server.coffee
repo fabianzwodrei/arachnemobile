@@ -65,7 +65,7 @@ app.get "/api/buildings", buildingController.list
 app.post "/api/buildings", buildingController.insert
 app.get "/api/buildings/:id", buildingController.get
 app.put "/api/buildings/:id", buildingController.insert
-# app.delete "/api/buildings/:id", buildingController.delete
+app.delete "/api/buildings/:id", buildingController.delete
 
 # app.post "/api/user", userController.loginOrNew
 

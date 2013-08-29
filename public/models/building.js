@@ -30,7 +30,7 @@
         options.error = function(building, xhr, options) {
           console.log("error while saving");
           building.set({
-            status: 'changedOnClient'
+            status: 'modified'
           });
           return localStorage.setItem(building.id, JSON.stringify(building.toJSON()));
         };
@@ -40,6 +40,11 @@
           }
         };
         return Backbone.Model.prototype.save.call(this, attributes, options);
+      };
+
+      Building.prototype.destroy = function() {
+        this.url = "api/buildings/" + this.id + "?rev=" + this.attributes._rev;
+        return Backbone.Model.prototype.destroy.call(this);
       };
 
       return Building;

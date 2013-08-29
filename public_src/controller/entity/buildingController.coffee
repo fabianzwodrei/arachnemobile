@@ -17,7 +17,7 @@ define	[
 			initialize: (buildings) ->
 				$('body').append(@el)
 				@buildings = buildings
-				# @buildings.bind('all', @logger, @)
+				@buildings.bind('all', @logger, @)
 				@buildings.bind('reset', @renderList, @)
 				@buildings.bind('error', @showError, @)
 
@@ -34,8 +34,12 @@ define	[
 
 
 			useLocalstorage: () ->
+				console.log "useLocalStorage"
 				@buildings.loadLocalCopy()
+				$(window.location).attr({'href':'#buildings', 'trigger' :false })
 				@renderList()
+
+	
 
 			list: ->
 
@@ -80,6 +84,10 @@ define	[
 					$(@el).html compiledFormTemplate
 						obj: @building.toJSON()
 						localVersionAvailable : @building.localVersionAvailable
+					
+					$('input, textarea').change ()->						
+						$('#status').val('modified')
+
 				else
 					@building.bind('change', @show,@)
 					@building.fetch()
