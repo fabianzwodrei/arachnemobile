@@ -6,7 +6,7 @@
 
   db = nano.use('arachne');
 
-  exports.list = function(request, response) {
+  exports.list = function(req, response) {
     return db.view_with_list('entities', 'preview', 'index', function(error, body) {
       if (error == null) {
         return response.send(body);

@@ -1,7 +1,7 @@
 nano = require('nano')('http://localhost:5984')
 db = nano.use('arachne')
 
-exports.list = (request, response) ->
+exports.list = (req, response) ->
 	db.view_with_list 'entities', 'preview', 'index', (error, body) ->
 		unless error?
 			response.send body

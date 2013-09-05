@@ -19,22 +19,34 @@
 
       Buildings.prototype._currentBuildingId = null;
 
+      Buildings.prototype.search = function(query) {
+        return this.fetch({
+          url: 'http://localhost:9200/arachne/_search?q=' + query
+        });
+      };
+
       Buildings.prototype.parse = function(response) {
-        this.reset(response, {
-          silent: true
-        });
-        this.each(function(building) {
-          var localCopy;
-          if ((localCopy = localStorage.getItem(building.id)) != null) {
-            building.localVersionAvailable = true;
-            localCopy = $.parseJSON(localCopy);
-            if (localCopy.status === "changedOnClient") {
-              return building.set(localCopy);
+        if (response.hits == null) {
+          this.reset(response, {
+            silent: true
+          });
+          this.each(function(building) {
+            var localCopy;
+            if ((localCopy = localStorage.getItem(building.id)) != null) {
+              building.localVersionAvailable = true;
+              localCopy = $.parseJSON(localCopy);
+              if (localCopy.status === "changedOnClient") {
+                return building.set(localCopy);
+              }
             }
-          }
-        });
-        this.trigger('reset');
-        return response;
+          });
+          this.trigger('reset');
+          return response;
+        } else {
+          return this.reset(_(response.hits.hits).map(function(hit) {
+            return hit._source;
+          }));
+        }
       };
 
       Buildings.prototype.setCurrentBuildingById = function(id) {

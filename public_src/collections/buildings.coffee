@@ -3,6 +3,10 @@ define ['backbone', '../models/building'], (Backbone, Building) ->
 		model: Building
 		url : 'api/buildings'
 		_currentBuildingId : null
+
+		search : (query) ->
+			@fetch
+				url : 'http://localhost:9200/arachne/_search?q=' + query
 		
 		parse : (response) ->
 			# _.each response, (building) ->
@@ -16,18 +20,21 @@ define ['backbone', '../models/building'], (Backbone, Building) ->
 			# 		if localCopy.status == "changedOnClient"
 			# 			building.status = localCopy.status
 			# , @
+			unless response.hits?
+				@reset(response, {silent : true})
+				# Überprüfe ob es eine lokale Version im Cache des Gerätes gibt
+				@each (building) -> 
+					if (localCopy = localStorage.getItem building.id)?
+						building.localVersionAvailable = true
+						localCopy = $.parseJSON(localCopy)
+						if localCopy.status == "changedOnClient"
+							building.set localCopy
 
-			@reset(response, {silent : true})
-			# Überprüfe ob es eine lokale Version im Cache des Gerätes gibt
-			@each (building) -> 
-				if (localCopy = localStorage.getItem building.id)?
-					building.localVersionAvailable = true
-					localCopy = $.parseJSON(localCopy)
-					if localCopy.status == "changedOnClient"
-						building.set localCopy
-
-			@trigger('reset')
-			response
+				@trigger('reset')
+				return response
+			else 
+				@reset _(response.hits.hits).map (hit) ->
+					return hit._source
 
 		setCurrentBuildingById: (id) ->
 			@_currentBuildingId = id

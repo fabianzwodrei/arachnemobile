@@ -27,7 +27,6 @@
       BuildingController.prototype.initialize = function(buildings) {
         $('body').append(this.el);
         this.buildings = buildings;
-        this.buildings.bind('all', this.logger, this);
         this.buildings.bind('reset', this.renderList, this);
         return this.buildings.bind('error', this.showError, this);
       };
@@ -66,11 +65,7 @@
 
       BuildingController.prototype.search = function(q) {
         this.query = q;
-        this.buildings.fetch({
-          data: {
-            q: this.query
-          }
-        });
+        this.buildings.search(this.query);
         return $('#searchinput').blur();
       };
 
@@ -122,6 +117,7 @@
         event.preventDefault();
         $(event.target).replaceWith('lädt');
         array = $(event.target).serializeArray();
+        console.log(array);
         postdata = {};
         buildingId = null;
         _.each(array, function(formInput) {

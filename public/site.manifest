@@ -1,7 +1,7 @@
 CACHE MANIFEST
-# sdsssssssgit ssss ssssssssssdd
+# sdsssssssgitgot  ssss ssssssssssdd
 
-/static/lib/require.js
+/static/lib/require.jsgit config --global user.name
 /static/stylesheets/style.css
 /static/stylesheets/font-awesome.min.css
 /main.js
@@ -20,7 +20,7 @@ CACHE MANIFEST
 /models/user.js
 /models/appStatus.js
 /static/layouts/menu.html
-/static/templates/formBuilding.html
+/static/templates/formBuildin	g.html
 /static/templates/listedBuilding.html
 /static/layouts/login.html
 /static/lib/backbone-min.js

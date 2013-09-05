@@ -1,0 +1,15 @@
+curl -XPUT 'localhost:9200/_river/arachne/_meta' -d '{
+    "type" : "couchdb",
+    "couchdb" : {
+        "host" : "localhost",
+        "port" : 5984,
+        "db" : "arachne",
+        "filter" : null
+    },
+    "index" : {
+        "index" : "arachne",
+        "type" : "arachne",
+        "bulk_size" : "100",
+        "bulk_timeout" : "10ms"
+    }
+}'

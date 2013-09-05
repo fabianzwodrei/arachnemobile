@@ -17,7 +17,7 @@ define	[
 			initialize: (buildings) ->
 				$('body').append(@el)
 				@buildings = buildings
-				@buildings.bind('all', @logger, @)
+				# @buildings.bind('all', @logger, @)
 				@buildings.bind('reset', @renderList, @)
 				@buildings.bind('error', @showError, @)
 
@@ -51,9 +51,7 @@ define	[
 
 			search: (q) ->
 				@query = q
-				@buildings.fetch
-					data : 
-						q : @query
+				@buildings.search(@query)
 				# Funktion um die Tastatur von iOS Geräten auszublenden:
 				$('#searchinput').blur()
 				
@@ -96,8 +94,11 @@ define	[
 				event.preventDefault()
 				$(event.target).replaceWith('lädt')
 
+				# $('#status').attr
+				# 	'disaled' : false
 				# inhalte des formulars serialisieren
 				array = $(event.target).serializeArray()
+				console.log array
 				postdata = {}
 				buildingId = null
 				_.each array, (formInput) ->

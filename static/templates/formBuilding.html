@@ -4,7 +4,7 @@
 	<br>
 	<textarea name="description" placeholder="Beschreibung" rows="6"><% if(obj) {%><%= obj.description %><% } %></textarea><br>
 	<input name="gps" placeholder="GPS" value="<% if(obj) {%><%= obj.gps %><% } %>"><br>
-	<input name="status" id="status" placeholder="Status" value="<% if(obj) {%><%= obj.status %><% } %>" disabled><br>
+	<input name="status" id="status" placeholder="Status" value="<% if(obj) {%><%= obj.status %><% } %>" readonly="readonly"><br>
 	<select name="type">
 		<% if(obj) {%>
 			<option selected="selected" value="<%= obj.type %>"><%= obj.type %></option>
