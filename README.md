@@ -1,6 +1,6 @@
 ## Coursework ##
 ### University of Cologne ###
- Historisch-Kulturwissenschaftliche Informationsverarbeitung 
+### Historisch-Kulturwissenschaftliche Informationsverarbeitung ###
  - Course: Software Engineering: Basistechnologien ###
  - VVZ-Nr.: 42712 ###
 
