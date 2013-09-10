@@ -6,7 +6,7 @@
 
 ## Features ##
 
-### collaborative database application for the humanities: ###
+### Scenario: Collaborative database application for the humanities ###
 * coursework focuses on offline status and on mobile devices
 * user management (Sign Up, Log in)
 * caching entries for:
