@@ -1,9 +1,9 @@
-_Coursework for University of Cologne_
+# Coursework for University of Cologne
 Course:
 Software Engineering: Basistechnologien
 VVZ-Nr.: 42712
 
-_Features_
+# Features
 
 * caching entries for:
 * offline editing
@@ -13,17 +13,17 @@ _Features_
 * checking for connectvity every 5 seconds
 * ...
 
-_Database_
+# Database
 	CouchDB
 
-_Indexing and search_
+# Indexing and search
 	Elastic Search 
 		* Apache Lucene Extension
 		* Search Server
 		* JSON over HTTP
 		* Lucene itself is just an indexing and search library
 
-_Server_
+# Server 
 	nodejs
 
 	dependencies:
@@ -33,7 +33,7 @@ _Server_
         coffee-script
         bcrypt
 
-_Frontend_
+# Frontend
 	Backbonejs
 	sitemanifest
 	html5 apple mobile safari tags
