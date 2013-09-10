@@ -1,11 +1,14 @@
 ## Coursework ##
 ### University of Cologne ###
 ### Historisch-Kulturwissenschaftliche Informationsverarbeitung ###
- - Course: Software Engineering: Basistechnologien ###
- - VVZ-Nr.: 42712 ###
+ - Course: Software Engineering: Basistechnologien 
+ - VVZ-Nr.: 42712
 
 ## Features ##
 
+### collaborative database application for the humanities: ###
+* coursework focuses on offline status and on mobile devices
+* user management (Sign Up, Log in)
 * caching entries for:
 * offline editing
 * offline creation of entries
