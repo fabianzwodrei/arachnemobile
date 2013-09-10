@@ -1,0 +1,10 @@
+{
+   "_id": "_design/users",
+   "_rev": "21-d771384544203eb9c9a75137f43a7619",
+   "language": "javascript",
+   "views": {
+       "by_email": {
+           "map": "function (doc) {\n    if (doc.email) {\n        emit(doc.email, {'id': doc._id, 'password': doc.password, 'email':doc.email});\n    }\n}"
+       }
+   }
+}

@@ -1,1 +1,54 @@
-hurra
+_Coursework for University of Cologne_
+Course:
+Software Engineering: Basistechnologien
+VVZ-Nr.: 42712
+
+_Features_
+
+* caching entries for:
+* offline editing
+* offline creation of entries
+* offline photo proccessing and saving
+* online push 
+* checking for connectvity every 5 seconds
+* ...
+
+_Database_
+	CouchDB
+
+_Indexing and search_
+	Elastic Search 
+		* Apache Lucene Extension
+		* Search Server
+		* JSON over HTTP
+		* Lucene itself is just an indexing and search library
+
+_Server_
+	nodejs
+
+	dependencies:
+		express
+        path
+       	nano
+        coffee-script
+        bcrypt
+
+_Frontend_
+	Backbonejs
+	sitemanifest
+	html5 apple mobile safari tags
+
+---------------
+
+Technologies that didn't make it
+
+* Ruby on rails
+* monogo db
+
+
+
+
+
+
+
+

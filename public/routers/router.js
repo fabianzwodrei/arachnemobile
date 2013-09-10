@@ -14,6 +14,7 @@
         var appCache;
         this.buildings = params.buildings;
         this.appStatus = params.appStatus;
+        this.user = params.user;
         this.appStatus.bind('change:online', this.reloadControllerForConnectivityChange, this);
         appCache = window.applicationCache;
         switch (appCache.status) {
@@ -69,10 +70,14 @@
       },
       login: function() {
         if (this.controller == null) {
-          return this.controller = new SessionController();
+          return this.controller = new SessionController({
+            user: this.user
+          });
         } else if (this.controller.id !== 'sessionController') {
           this.controller.release();
-          return this.controller = new SessionController();
+          return this.controller = new SessionController({
+            user: this.user
+          });
         }
       }
     });

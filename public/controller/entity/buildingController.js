@@ -21,7 +21,8 @@
         'submit': 'save',
         'click #delte': 'delete',
         'click #localCopyBtn': 'localCopy',
-        'click #deleteLocalCopyBtn': 'deleteLocalCopy'
+        'click #deleteLocalCopyBtn': 'deleteLocalCopy',
+        'change #cameraInput': 'preprocessUploadedImage'
       };
 
       BuildingController.prototype.initialize = function(buildings) {
@@ -101,7 +102,8 @@
           compiledFormTemplate = _.template(FormTemplate);
           $(this.el).html(compiledFormTemplate({
             obj: this.building.toJSON(),
-            localVersionAvailable: this.building.localVersionAvailable
+            localVersionAvailable: this.building.localVersionAvailable,
+            revisionsList: this.building.revisionsList
           }));
           return $('input, textarea').change(function() {
             return $('#status').val('modified');
@@ -140,6 +142,9 @@
             'href': '#buildings'
           });
         }, this);
+        if (building.attributes._revs_info != null) {
+          delete building.attributes._revs_info;
+        }
         return building.save();
       };
 
@@ -165,6 +170,39 @@
       BuildingController.prototype.deleteLocalCopy = function() {
         localStorage.removeItem(this.building.id);
         return window.location.hash = 'buildings';
+      };
+
+      BuildingController.prototype.preprocessUploadedImage = function() {
+        var file, filename, fr, input, self;
+        input = document.getElementById('cameraInput');
+        file = input.files[0];
+        filename = input.value;
+        fr = new FileReader();
+        self = this;
+        fr.onload = function() {
+          var img;
+          $('#newImagePreview').show();
+          img = new Image();
+          img.onload = function() {
+            var canvas, ctx, dataURL;
+            canvas = document.getElementById("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            dataURL = canvas.toDataURL("image/png");
+            if (self.building.attributes['_attachments'] == null) {
+              self.building.attributes['_attachments'] = {};
+            }
+            self.building.attributes['_attachments'][filename] = {};
+            return self.building.attributes['_attachments'][filename] = {
+              "content_type": "image\/png",
+              "data": dataURL.replace(/^data:image\/(png|jpg);base64,/, "")
+            };
+          };
+          return img.src = fr.result;
+        };
+        return fr.readAsDataURL(file);
       };
 
       BuildingController.prototype.release = function() {

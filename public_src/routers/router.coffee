@@ -15,7 +15,8 @@ define [
 
 			initialize: (params) ->
 				@buildings = params.buildings
-				@appStatus = params.appStatus	
+				@appStatus = params.appStatus
+				@user = params.user
 				@appStatus.bind 'change:online', @reloadControllerForConnectivityChange, @
 				
 				appCache = window.applicationCache;
@@ -65,7 +66,9 @@ define [
 
 			login : () ->
 				unless @controller?
-					@controller = new SessionController()
+					@controller = new SessionController
+						user : @user
 				else if @controller.id != 'sessionController'
 					@controller.release()
-					@controller = new SessionController()
+					@controller = new SessionController
+						user : @user

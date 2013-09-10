@@ -25,6 +25,14 @@
         status: 'unknown'
       };
 
+      Building.prototype.parse = function(response) {
+        if (response._revs_info) {
+          this.revisionsList = response._revs_info;
+          delete response._revs_info;
+        }
+        return response;
+      };
+
       Building.prototype.save = function(attributes, options) {
         options = {};
         options.error = function(building, xhr, options) {

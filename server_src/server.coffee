@@ -44,10 +44,10 @@ app.configure ->
 
 
 buildingController = require('./controllers/buildings')
-# userController  = require('./controllers/users')
-#Connect to database
-# mongoose.connect "mongodb://localhost/library_database"
+userController  = require('./controllers/users')
+
 nano = require('nano')('http://localhost:5984')
+
 # db_name = 'arachne'
 # app.get "/", (request, response) ->
 # 	nano.db.create db_name, (error, body, headers) ->
@@ -66,12 +66,12 @@ app.post "/api/buildings", buildingController.insert
 app.get "/api/buildings/:id", buildingController.get
 app.put "/api/buildings/:id", buildingController.insert
 app.delete "/api/buildings/:id", buildingController.delete
+app.get "/api/buildings/:id/:filename", buildingController.getAttachment
 
-# app.post "/api/user", userController.loginOrNew
+app.post "/api/user", userController.loginOrNew
 
 app.get "/site.manifest", (request, response, next) ->
 	response.header "Content-Type", "text/cache-manifest"
-	console.log "Site Manifest File was requested"
 	next()
 
 #Start server

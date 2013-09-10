@@ -15,6 +15,8 @@
 
       User.prototype.urlRoot = "api/user";
 
+      User.prototype.idAttribute = "_id";
+
       return User;
 
     })(Backbone.Model);

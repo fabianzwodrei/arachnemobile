@@ -13,6 +13,7 @@ define	[
 				'click #delte' : 'delete'
 				'click #localCopyBtn' : 'localCopy'
 				'click #deleteLocalCopyBtn' : 'deleteLocalCopy'
+				'change #cameraInput' : 'preprocessUploadedImage'
 
 			initialize: (buildings) ->
 				$('body').append(@el)
@@ -38,8 +39,6 @@ define	[
 				@buildings.loadLocalCopy()
 				$(window.location).attr({'href':'#buildings', 'trigger' :false })
 				@renderList()
-
-	
 
 			list: ->
 
@@ -82,6 +81,7 @@ define	[
 					$(@el).html compiledFormTemplate
 						obj: @building.toJSON()
 						localVersionAvailable : @building.localVersionAvailable
+						revisionsList : @building.revisionsList
 					
 					$('input, textarea').change ()->						
 						$('#status').val('modified')
@@ -116,7 +116,9 @@ define	[
 					building.unbind()
 					$(window.location).attr({'href':'#buildings'})
 				,@
-				
+				# RevisionsInfos müssen entfernt werden
+				if building.attributes._revs_info?
+					delete building.attributes._revs_info
 				building.save()
 
 			delete: (event) ->
@@ -138,6 +140,43 @@ define	[
 				localStorage.removeItem @building.id
 				window.location.hash = 'buildings'
 
+			preprocessUploadedImage: () ->
+				input = document.getElementById('cameraInput');
+
+				file = input.files[0]
+				filename = input.value
+				fr = new FileReader()
+				self = @
+				fr.onload = () ->
+					$('#newImagePreview').show()
+					img = new Image()
+					img.onload = () ->
+						canvas = document.getElementById("canvas")
+						canvas.width = img.width;
+						canvas.height = img.height;
+						ctx = canvas.getContext("2d");
+						ctx.drawImage(img,0,0);
+						dataURL = canvas.toDataURL("image/png")
+
+						unless self.building.attributes['_attachments']?
+							self.building.attributes['_attachments'] = {}
+
+						self.building.attributes['_attachments'][filename] = {}
+						self.building.attributes['_attachments'][filename] =
+							"content_type" :"image\/png"
+							"data" : dataURL.replace(/^data:image\/(png|jpg);base64,/, "")
+
+					img.src = fr.result
+				fr.readAsDataURL(file)
 
 			release: ->
 				@remove()
+
+
+
+
+
+
+
+
+

@@ -1,38 +1,50 @@
-mongoose = require('mongoose')
 bcrypt = require('bcrypt')
 SALT_WORK_FACTOR = 10
-    
-UserSchema = new mongoose.Schema(
-    email:
-    	type : String
-    	required : true
-    	index:
-    		unique : true
 
-    password: 
-    	type : String
-    	required : true
-)
+nano = require('nano')('http://localhost:5984')
+db = nano.use('arachneusers')
 
-UserSchema.pre 'save', (next) ->
-	user = this
-	# only hash the password if it has been modified (or is new)
-	unless user.isModified('password') then retrun next()
+User = (email, password) ->
+	@email = email
+	@password = password
+
+User.prototype.save = (callback) ->
+	user = @
 	# generate a salt
 	bcrypt.genSalt SALT_WORK_FACTOR, (err, salt) ->
-		if err then return next(err)
-
+		if err
+			callback(error)
 		# hash the password along with our new salt
 		bcrypt.hash user.password, salt, (err, hash) ->
-			if err then return next(err)
-
+			if err 
+				callback(error)
+			
 			# override the cleartext password with the hashed one
 			user.password = hash
-			next()
+			
+			attributes =
+				email : user.email
+				password : user.password 
 
-UserSchema.methods.comparePassword = (candidatePassword, cb) ->
+			db.insert attributes, (err, obj) ->
+				unless error?
+					console.log  "no error in user insert"
+					callback(err,obj)
+				else 
+					callback(err,obj)
+
+User.prototype.comparePassword = (candidatePassword, cb) ->
 	bcrypt.compare candidatePassword, @password, (err, isMatch) ->
 		if err then return cb(err)
 		cb null, isMatch 
 
-module.exports = mongoose.model("User", UserSchema)
+User.prototype.findOne = (callback) ->
+	# http://127.0.0.1:5984/arachneusers/_design/users/_view/by_email?key="shit@you.too"
+	db.view 'users', 'by_email', { keys : [@email]}, (error, object) ->
+		unless error?
+			# wenn ein user mit der richtigen emailadresse gefunden wurde, wird er zurückgegeben
+			if object.rows[0]? then callback(error, object.rows[0].value)
+		else
+			callback(error)			
+
+module.exports = User

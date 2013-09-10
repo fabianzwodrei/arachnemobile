@@ -1,0 +1,19 @@
+{
+   "_id": "_design/entities",
+   "_rev": "71-91d4af4817003c280c28127b5fb99334",
+   "language": "javascript",
+   "views": {
+       "buildings": {
+           "map": "function(doc) {  if (doc.type == 'building')  {    emit(doc);  }}"
+       },
+       "preview": {
+           "map": "function(doc) { emit( doc._id, {_id: doc._id, title: doc.title, type : doc.type } ); }"
+       },
+       "search": {
+           "map": "function(doc) {\n  var found = doc[\"title\"];\n    if(found) {\n      emit(doc.title, null);\n    }\n}"
+       }
+   },
+   "lists": {
+       "index": "function(head, req) { start({'headers': { 'Content-Type': 'application/json' } }); var row, result = []; while(row = getRow()) { result.push(row.value); } send(toJSON(result)); }"
+   }
+}

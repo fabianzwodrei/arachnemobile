@@ -1,9 +1,8 @@
 define [
 	'../controller'
 	'text!/../static/layouts/login.html'
-	'../../models/user'
 	],
-	(Controller, Layout, User) ->
+	(Controller, Layout) ->
 		class SessionController extends Controller
 			events:
 				'submit #signIn' : 'login'
@@ -11,8 +10,11 @@ define [
 
 			initialize: (params) ->
 				$('body').append(@el)
-				$(@el).html(_.template(Layout)) 
-
+				@user = params.user
+				unless @user.id?
+					$(@el).html(_.template(Layout)) 
+				else 
+					$(@el).html('sie sind angemeldet')
 	
 			login: (event) ->
 				event.preventDefault()
@@ -23,7 +25,7 @@ define [
 				_.each array, (formInput) ->
 					postdata[formInput.name] = formInput.value
 
-				@user = new User(postdata)
+				@user.set postdata
 				@user.bind('sync', @forwardToBuildings, @)
 				@user.bind('error', @tryagain, @)
 				@user.save()
@@ -33,6 +35,7 @@ define [
 				alert "Nochmal bitte, irgendwas war falsch."
 
 			forwardToBuildings: ->
+				alert "Erfolgreich angemeldet!" 
 				@user.unbind('sync', @forwardToBuildings, @)
 				$(window.location).attr
 					href : '#buildings'

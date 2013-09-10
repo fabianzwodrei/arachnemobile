@@ -9,15 +9,15 @@
     if ((request.body.email != null) && request.body.email.length > 5) {
       if (request.body.passwordrepeated != null) {
         if (request.body.password === request.body.passwordrepeated) {
-          user = new User({
-            email: request.body.email,
-            password: request.body.password
-          });
-          return user.save(function(err) {
-            if (!err) {
-              console.log("created new user");
-              console.log(user);
-              return response.redirect('/');
+          user = new User(request.body.email, request.body.password);
+          return user.save(function(error, obj) {
+            if (error == null) {
+              request.session.user = user.email;
+              request.session.authenticated;
+              return response.send(200, {
+                email: user.email,
+                _id: obj.id
+              });
             } else {
               return console.log(err);
             }
@@ -26,18 +26,25 @@
           return response.send('400', 'Retyped password did not match the password.');
         }
       } else {
-        return User.findOne({
-          email: request.body.email
-        }, function(err, user) {
-          if (typeof error === "undefined" || error === null) {
-            request.session.user = user.email;
-            request.session.authenticated;
-            return response.send(200, {
-              email: user.email,
-              _id: user._id
+        user = new User(request.body.email, request.body.password);
+        return user.findOne(function(error, dbUser) {
+          if (error == null) {
+            return user.comparePassword(dbUser.password, function(err, isMatch) {
+              if (err == null) {
+                if (isMatch != null) {
+                  request.session.user = user.email;
+                  request.session.authenticated;
+                  return response.send(200, {
+                    email: dbUser.email,
+                    _id: dbUser.id
+                  });
+                }
+              } else {
+                return response.send(403);
+              }
             });
           } else {
-            return console.log("err");
+            return response.send(500);
           }
         });
       }

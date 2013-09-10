@@ -5,6 +5,7 @@
 	<textarea name="description" placeholder="Beschreibung" rows="6"><% if(obj) {%><%= obj.description %><% } %></textarea><br>
 	<input name="gps" placeholder="GPS" value="<% if(obj) {%><%= obj.gps %><% } %>"><br>
 	<input name="status" id="status" placeholder="Status" value="<% if(obj) {%><%= obj.status %><% } %>" readonly="readonly"><br>
+	<h5>Kategorie:</h5>
 	<select name="type">
 		<% if(obj) {%>
 			<option selected="selected" value="<%= obj.type %>"><%= obj.type %></option>
@@ -13,11 +14,13 @@
 		<% } %>
 	</select>
 	<br>
-	<input id="submit" type="submit" value="Neue Version speichern"> 
+	<h5>Neue Abbildung:</h5>
+	<input type="file" capture="camera" accept="image/*" id="cameraInput"> 
+	<input id="submit" type="submit" value="Speichern (neue Version)">
+	<hr>
+	<h5>Optionen:</h5>
 <% if(obj) {%>
-	<br>
-	<input id="delte" type="button" value="Version löschen">
-	<br>
+	<input id="delte" type="button" value="löschen">
 	<% if(localVersionAvailable) { %>
 		<input id="deleteLocalCopyBtn" type="button" value="lokale Kopie löschen">
 	<% } else { %>
@@ -27,12 +30,26 @@
 	
 
 </form>
-
-<% if(obj) { if (obj._revs_info) {%>
+<hr>
+<div id="newImagePreview" style="display:none;">
+	<h5 style="color:red">Neue Abbildung: (noch nicht auf Server!)</h5>
+	<canvas id="canvas" style="margin: 10px 10px 0;"></canvas>
 	<hr>
-	<h4>Versionen:</h4>
+</div>
+<h5>Abbildungen:</h5>
+<div id="imagesContainer" style="margin: 10px 10px 0;">
+	<% if(obj) { if (obj._attachments) {%>
+		<% for(var key in obj._attachments) {
+			attachment = obj._attachments[key]; %>
+			<img src="http://localhost:4000/api/buildings/<%= obj._id %>/<%= key %>">
+		<% } %>
+	<% }} %>
+</div>
+<% if(obj) { if (revisionsList) {%>
+	<hr>
+	<h5>Versionen:</h5>
 	<ul>
-		<% _.each(obj._revs_info, function(revision){ %>
+		<% _.each(revisionsList, function(revision){ %>
 			<li id="<%= revision.rev %>"><small><%= revision.rev %></small></li>
 		<% }) %>
 	</ul>

@@ -15,7 +15,16 @@ input, textarea, select {
 	margin: 10px 10px 0 10px;
 	border-radius: 0;
 	-webkit-appearance: none;
+
 }
+
+/* Smartphones */
+@media (max-width: 320px) {
+	input, textarea, select {
+		width: 94%;
+	}
+}
+
 li {
 	padding:12px 15px 10px 10px;
 	border-bottom: solid 1px #eaeaea;
@@ -25,7 +34,7 @@ li a {
 	display: block;
 }
 
-h4, hr {
+h4, h5, h6, hr {
 	margin: 10px 10px 0 10px;
 
 }

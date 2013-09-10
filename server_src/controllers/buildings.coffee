@@ -13,7 +13,7 @@ exports.get = (request, response) ->
 	#  rev_info = true bewirkt eine Übertragung einer Versionsliste,
 	#  die man dem Nutzer anzeigen kann
 	options = {
-		revs_info : false
+		revs_info : true
 	}
 
 	# wenn eine spezielle Version angefragt wurde,
@@ -50,5 +50,10 @@ exports.delete = (request, response) ->
 				response.send 200, body
 			else 
 				response.send 500, body
+
+exports.getAttachment = (request, response) ->
+	db.attachment.get request.params.id, request.params.filename, (error, body) ->
+		unless error?
+			response.send 200, body
 
 

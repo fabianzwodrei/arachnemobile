@@ -7,10 +7,17 @@ define ['backbone'], (Backbone) ->
 		attributes : 
 			status : 'unknown'
 
+		parse: (response) ->
+			if response._revs_info
+				@revisionsList = response._revs_info
+				delete response._revs_info
+			response
+
 		save : (attributes, options) ->
 			options = {}
 			options.error = (building, xhr, options) ->
 				console.log "error while saving"
+
 				building.set
 					status : 'modified'
 				localStorage.setItem(building.id , JSON.stringify(building.toJSON()))

@@ -19,7 +19,7 @@
   exports.get = function(request, response) {
     var options;
     options = {
-      revs_info: false
+      revs_info: true
     };
     if (request.query.rev != null) {
       options.rev = request.query.rev;
@@ -62,6 +62,14 @@
         return response.send(200, body);
       } else {
         return response.send(500, body);
+      }
+    });
+  };
+
+  exports.getAttachment = function(request, response) {
+    return db.attachment.get(request.params.id, request.params.filename, function(error, body) {
+      if (error == null) {
+        return response.send(200, body);
       }
     });
   };

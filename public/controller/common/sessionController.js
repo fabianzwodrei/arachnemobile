@@ -3,7 +3,7 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['../controller', 'text!/../static/layouts/login.html', '../../models/user'], function(Controller, Layout, User) {
+  define(['../controller', 'text!/../static/layouts/login.html'], function(Controller, Layout) {
     var SessionController, _ref;
     return SessionController = (function(_super) {
       __extends(SessionController, _super);
@@ -20,7 +20,12 @@
 
       SessionController.prototype.initialize = function(params) {
         $('body').append(this.el);
-        return $(this.el).html(_.template(Layout));
+        this.user = params.user;
+        if (this.user.id == null) {
+          return $(this.el).html(_.template(Layout));
+        } else {
+          return $(this.el).html('sie sind angemeldet');
+        }
       };
 
       SessionController.prototype.login = function(event) {
@@ -31,7 +36,7 @@
         _.each(array, function(formInput) {
           return postdata[formInput.name] = formInput.value;
         });
-        this.user = new User(postdata);
+        this.user.set(postdata);
         this.user.bind('sync', this.forwardToBuildings, this);
         this.user.bind('error', this.tryagain, this);
         return this.user.save();
@@ -43,6 +48,7 @@
       };
 
       SessionController.prototype.forwardToBuildings = function() {
+        alert("Erfolgreich angemeldet!");
         this.user.unbind('sync', this.forwardToBuildings, this);
         return $(window.location).attr({
           href: '#buildings'
